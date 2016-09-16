@@ -1,0 +1,17 @@
+body
+{
+    font-family: Trebuchet MS, Arial, sans-serif;
+    margin: +32pt;
+}
+
+photo
+{
+    height: auto;
+    width: 80%;
+    max-width:400px;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
