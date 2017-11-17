@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta name="keywords" content="rob blackwell, azure, mvp, bas, auv, uea" />
+	<link rel="stylesheet" href="../../../tufte.css"/>
+	<link rel="stylesheet" href="../../../latex.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Rob Blackwell</title>
+    </head>
+    <body>
+	<article>
+	    
+
+	    <h1>Protocol design for very low bandwidth systems</h1>
+	    <p class="subtitle" >
+		Rob Blackwell, October 2006
+	    </p>
+
+	    <p>
+		I've helped design two protocols for telemetry systems
+		over the last couple of years and I want to summarise
+		some learning points for future reference.
+	    </p>
+	    <p>
+		The general advice these days is "don't design a new
+		protocol". With so many standards to choose from and
+		with XML supposedly being the common data format, it's
+		hard to see why you'd want to create a new
+		communications protocol. The trouble is that we're
+		talking very low bandwidth here (as low as 10 bytes
+		per minute), so every bit has to earn its place.
+	    </p>
+	    <p>
+		Reserve a few bits as a message type. This gives you
+		future extensibility; new terminals can add new
+		features whilst the receiver retains backwards
+		compatibility with older models.
+	    </p>
+	    <p>
+		It's surprising how few bits you need to represent
+		apparently complex information. You only need 43 bits
+		for a full GPS position for example.
+	    </p>
+	    <p>
+		Consider using checksums or Cyclic Redundancy
+		Checks. CRCs are useful to ensure data integrity. By
+		seeding the CRC bytes with an agreed bit pattern you
+		can achieve a kind of crude digital signature for non
+		repudiation of messages. ISO/IEC 13239 (formerly
+		ISO/IEC 3309) contains a popular CRC algorithm.
+	    </p>
+	    <p>
+		Provide a sequence number count. Even if you only have
+		three bits, you can number successive messages from 0
+		through 7, rolling back to 0 instead of 8. It's then
+		easy to detect missed packets or packets delivered out
+		of sequence.
+	    </p>
+	    <p>
+		Telemetry systems often report on a periodic basis
+		whilst allowing "polling" to query status at any given
+		time. It's a good idea to distinguish periodic reports
+		from poll responses to aid diagnosis if a terminal is
+		misbehaving.
+	    </p>
+	    <p>
+		Implement diagnostics facilities. Build a mobile
+		terminated message which causes the transponder to
+		reply with a diagnostic packet. Use individual bits to
+		represent the current state of various sub systems.
+		Make 0 mean faulty and 1 mean good so that you assume
+		a fault unless the system actively reports
+		otherwise. Transponders are often deployed to far
+		flung or inaccessible places, so you need to be able
+		to debug them from the comfort of your office.
+	    </p>
+	    <p>
+		Consider implementing a reset message to allow remote
+		reboot of systems.
+	    </p>
+	    <p>
+		You can implement surprisingly good text messages
+		using six bit ASCII.
+	    </p>
+	    <p>
+		Many communications systems are asymmetric both in
+		terms of bandwidth, quality of service and
+		cost. Sometimes it's cheaper to send an important
+		message three or four times to more or less guarantee
+		delivery rather than implement handshaking
+		acknowledgements.
+	    </p>
+	    <p>
+		Consider packet layout. Sometimes aligning bits to
+		byte boundaries can make parser implementations
+		easier, especially in low level computer languages. If
+		certain notions such as priority apply to several
+		different packet types, make sure the same bit
+		positions are used. That way you don't have to parse
+		the whole packet.
+	    </p>
+	    <p>
+		If you have a GPS then you have access to an accurate
+		clock. If you encode just the seconds past the minute
+		within your message, then the receiver can calculate
+		transit time (if it too has an accurate clock) for the
+		cost of just 5 bits.
+	    </p>
+	    <p>
+		When considering adding generic features, read <a
+								   href="http://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">End-to-End
+		Arguments in System Design</a> Saltzer et al.
+	    </p>
+	    <p>
+		Question security. Is your communications system an open or closed
+		channel? Could it be hacked?
+	    </p>
+	</article>
+    </body>
+</html>

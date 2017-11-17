@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta name="keywords" content="rob blackwell, julia" />
+	<link rel="stylesheet" href="../tufte.css"/>
+	<link rel="stylesheet" href="../latex.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Rob Blackwell's Julia programming language notes</title>
+    </head>
+    <body>
+	<article>
+	    
+	    <h1>Notes on the Julia programming language</h1>
+	    <p class="subtitle" >
+		Rob Blackwell
+	    </p>
+	    <h2> Introduction </h2>
+	    <p>
+		I'm using the <a href="https://julialang.org/">Julia
+		programming language</a>
+		for my <a href="phd.html">PhD</a> work and this page
+		records various notes as an aide-m&eacute;moire. I acknowledge that
+		some of the material is opinionated, but I'm happy to accept
+		corrections or contributions.
+	    </p>
+	    
+	    <h2> Getting Started </h2>
+	    <p>
+		<a href="https://julialang.org/downloads/">Download</a>
+		and install the Julia current release.
+		Any tutorials by David Sanders are good, e.g.
+		<a href="https://www.youtube.com/watch?v=puMIBYthsjQ">An Invitation to Julia</a>.
+		There are some books (see <a href="https://julialang.org/learning/">Learning Julia</a>), but 
+		
+		the <a href="https://docs.julialang.org/">Julia documentation</a> arguably serves as a better resource.
+	    </p>
+
+	    <h2> Tools </h2>
+	    <p>
+		There are lots of options including Juno and Visual Studio Code, but I'm
+		just using Emacs and julia-mode.
+	    </p>
+	    <p>
+		I really like <a href="https://github.com/JuliaLang/IJulia.jl>">IJulia</a>
+		(Jupyter notebooks) and tend to have one per experiment / investigation,
+		printing them out and discussing them at supervisory meetings.
+		
+	    </p>
+	    <h2> Python support </h2>
+	    <p>
+		It's easy to call Python libraries from Julia, and this is a useful trap door if
+		you need a specialist library. See <a href="https://github.com/JuliaPy/PyCall.jl">PyCall.jl</a>
+		and <a href="https://github.com/JuliaPy/Conda.jl">Conda.jl</a>.
+	    </p>
+	    <p>
+		I like to set <code>export CONDA_JL_VERSION="3"</code> in my shell, prior to installing the Conda.jl package
+		to pick up Python 3 instead of Python 2.
+	    </p>
+	    <p>
+		Examining <code>Conda.ROOTENV</code> within Julia gives the directory of
+		the underlying Python environment. This allows you to hop out
+		to a shell, <code>activate</code> the environment and <code>pip install</code>
+		odd packages like <code>pynmea2</code>.
+
+		<pre>
+using PyCall
+@pyimport pynmea2
+pynmea2.parse(mystring)
+		</pre>
+	    </p>
+	    <h2> Code reuse </h2>
+	    <p>
+		I often start protototyping code in an IJulia notebook. When an idea
+		starts to come together I move it into a separate text file in
+		a directory I call <code>includes</code>. I can then resue it across
+		notebooks and scripts with:
+		<code>include(expanduser("~/Dropbox/phd/julia/include/plotsutils.jl"));</code>
+	    </p>
+	    <p>
+		Once I have a quorum of code on a particular topic and it starts to
+		feel like a reusable library, I create a package using <a href="https://github.com/JuliaLang/PkgDev.jl">PkgDev</a>.
+		I usually move that package directory from <code>~/.julia/vX.X</code> to my regular working
+		area and then link back to it using <code> ln -s ~/Dropbox/phd/julia/mypackage.jl mypackage</code>.
+		It's a good idea to make the real directory name <code>something.jl</code> and link just <code>something</code>
+		otherwise the <code>Pkg.test</code> facility doesn't seem to work.
+	    </p>
+	    <h2> Plotting </h2>
+	    <p>
+		There are lots of plotting libraries in Julia. My strategy is to use
+		<a href="https://github.com/JuliaPlots/Plots.jl">Plots.jl</a> whenever I
+		can and fall back to <a href="https://github.com/JuliaPy/PyPlot.jl">PyPlot</a>
+		for certain edge cases.
+	    </p>
+	    <p>
+		<A href="https://github.com/JuliaLang/IJulia.jl">IJulia</a> with
+		<a href="https://github.com/JuliaPlots/Plots.jl">Plots.jl</a> and
+		the <code>plotlyjs()</code> back end is particulalrly good for
+		interactive, exploratory programming. You might find that it
+		blows-up for large data sets, in which case try changing the backend
+		to <code>pyplot()</code>.
+	    </p>
+	    <h2>Interpolation</h2>
+	    <p>
+		Interpolation via <code>interp1</code> and <code>interp2</code> is a common thing in MATLAB
+		and <a href="https://github.com/JuliaMath/Interpolations.jl">Interpolations.jl</a>
+		is the Julia equivalent. This code is similar:
+	    </p>
+	    <pre>
+using Interpolations
+
+function interp1(X, V, Xq)
+    knots = (X,)
+    itp = interpolate(knots, V, Gridded(Linear()))
+    itp[Xq]
+end
+
+function interp2(X, Y, V, Xq, Yq)
+    knots = (X,Y)
+    itp = interpolate(knots, V, Gridded(Linear()))
+    itp[Xq, Yq]
+end
+	    </pre>
+	    <h2> Compared to Python </h2>
+	    <p>
+		Whilst Python code can be optimised, I find most Julia code to
+		be more performant with no effort (although I acknowledge that this
+		isn't always the case). For me, the switch to Julia meant that I
+		didn't have to move to a high performance compute cluster from
+		the convenience of a couple of PCs in the corner of my
+		study.
+	    </p>
+	    <p>
+		Most of the time, Julia just feels nicer to use, and that's
+		important when you spend a large proportion of your life staring
+		at a REPL.
+	    </p>
+	    <p>
+		The whole Python 2 or Python 3 thing is just irritating.
+	    </p>
+	    <h2> Compared to MATLAB </h2>
+	    <p>
+		MATLAB usage is widespread amongst  scientists for good reason; it's established and has very
+		high quality, proven libraries. In many ways it is the gold standard for scientific, exploratory
+		programming.
+	    </p>
+	    <p>
+		Unfortunately, a lot of graduate student science is just grunt work. Reading legacy file formats
+		and dealing with <q> big data</q> is a big part of that. MATLAB can do it, but it isn't very elegant. I also
+		found problems with compatability between versions. No two scientists
+		seem to use the same version and <q> it worked on my machine</q> is a common cry.
+		Upgrading a machine is often considered too risky or too expensive.
+	    </p>
+	    <p>
+		I found that MATLAB programmers can readily understand Julia code. Googling
+		for a MATLAB solution to a problem often turns up a function name, and that
+		can be the key to finding an equivalent Julia solution.
+	    </p>
+	    <p>
+		Julia is free and open source. The barrier to entry is much lower and
+		that's got to be a good thing for <a href="https://reproduciblescience.org/">reprodicible science</a>.
+	    </p>
+	    <h2> Niggles and problems</h2>
+	    <p>
+		Because the package system uses git, the local library directory <code>~/.julia</code> ends up being
+		large, mine is currently about 3.7G, and time consuming to set up on a new machine. Fortunately,
+		<a href="https://www.youtube.com/watch?v=-yUiLCGegJs">there is a new package manager. Pkg3 in the works</a>.
+	    </p>
+	    <p>
+		Some people worry that <q>you're using a language which hasn't even reached 1.0</q>. In practice
+		this has never really caused me a problem, the language developers are dilligent about
+		deprecating old syntax.
+	    </p>
+	    <p>
+		Compiler lag: You <code>Pkg.update()</code>, then the next time you come to use an
+		updated package you have to sit and wait for it to compile. This gives the impression
+		tha Julia is slow, particularly when working interactively. Once compiled, it's typically
+		<em>very</em> fast.
+	    </p>
+	    <p>
+		Updating packages can cause alarming WARNING and ERROR messages. Don't
+		worry about the warnings, if you get errors then <code>Pkg.build("somepackage")</code>
+		is almost always a cure.
+	    </p>
+	    <h2> Wishlist</h2>
+	    <p>
+		Is there a way to ask <code>whocalls(f)</code> where f is some function?
+	    </p>
+	    <p>
+		I'd like some refactoring
+		tools.
+	    </p>
+	    <p> <a href="https://common-lisp.net/project/slime/">SLIME</a>  support in Emacs would be great. I have a proof of concept
+		SWANK server.
+	    </p>
+	    <p>Last modified: Fri Nov 10:11:47 UTC 2017 by reb</p>
+	</article>
+    </body>
+</html>
+<!-- Local Variables: -->
+<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>" -->
+<!-- time-stamp-time-zone: "UTC" -->
+<!-- End: -->
