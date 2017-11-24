@@ -167,6 +167,16 @@ end
 		<a href="https://www.youtube.com/watch?v=-yUiLCGegJs">there is a new package manager. Pkg3 in the works</a>.
 	    </p>
 	    <p>
+		Julia is a <a href="https://en.wikipedia.org/wiki/Lisp-1_vs._Lisp-2">Lisp-1</a> so
+		naming variables so that they don't clash with functions can sometimes be
+		annoying, e.g
+	    </p>
+<pre>
+julia> wheels = wheels(mycar)
+ERROR: invalid redefinition of constant wheels
+</pre>
+			      
+	    <p>
 		Some people worry that <q>you're using a language which hasn't even reached 1.0</q>. In practice
 		this has never really caused me a problem, the language developers are dilligent about
 		deprecating old syntax.
@@ -193,7 +203,7 @@ end
 	    <p> <a href="https://common-lisp.net/project/slime/">SLIME</a>  support in Emacs would be great. I have a proof of concept
 		SWANK server.
 	    </p>
-	    <p>Last modified: Fri Nov 10:11:47 UTC 2017 by reb</p>
+	    <p>Last modified: Sat Nov 12:52:56 UTC 2017 by reb</p>
 	</article>
     </body>
 </html>
