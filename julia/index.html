@@ -73,7 +73,7 @@ pynmea2.parse(mystring)
 	    <p>
 		I often start protototyping code in an IJulia notebook. When an idea
 		starts to come together I move it into a separate text file in
-		a directory I call <code>includes</code>. I can then resue it across
+		a directory I call <code>includes</code>. I can then reuse it across
 		notebooks and scripts with:
 		<code>include(expanduser("~/Dropbox/phd/julia/include/plotsutils.jl"));</code>
 	    </p>
@@ -121,40 +121,128 @@ function interp2(X, Y, V, Xq, Yq)
     itp[Xq, Yq]
 end
 	    </pre>
+	    <h2> Scripting </h2>
+	    <p>
+		Julia can be used to make shell scripts, using the
+		shebang line below:
+	    </p>
+	    <pre>
+#!/usr/bin/env julia
+	    </pre>
+	    <p>
+		This can be useful in large projects where it allows
+		for Make to be used to build products incrementally.
+		Beware, the Julia start up time can be large in comparison
+		to the run time of your script so it can be very inefficient
+		to work with small files and tasks.
+	    </p>
+	    <h2> Logging </h2>
+	    <p>
+		The output of info(), warn() and error() is sent to
+		STDERR instead of STDOUT making them ideal mechanisms
+		for instrumenting and logging scripts, without messing
+		up output.
+	    </p>
+	    <pre>
+$ ./script.jl > output.txt 2> log.txt
+	    </pre>
+	    <p>
+		The above results in two files, output.txt with
+		everything your printed and log.txt with everything
+		written by info, warn and error.
+	    </p>
+
+	    <h2> On FreeBSD </h2>
+	    <p>
+		Julia works well on FreeBSD, but installation and
+		setup sometimes need a little more thought. There is
+		no Conda or other installer, so you must install
+		platform libraries yourself.  Packages are usually
+		tested on Windows, Mac and Linux rather than FreeBSD,
+		so be prepared for a bit of fixing up now and again.
+	    </p>
+	    <p>
+		Assuming FreeBSD 11.1 STABLE, julia 6.2 can be installed
+		using <code>pkg install julia</code>. It's hard to
+		go far in Julia without stumbling on some Python. The trick
+		is to install Python and PyCall first:
+	    </p>
+	    <pre>
+pkg install python3
+	    </pre>
+	    <p>
+		Then, in Julia:
+	    </p>
+	    <pre>
+ENV["PYTHON"]="python"
+Pkg.add("PyCall")
+	    </pre>
+	    <p>
+		In general it's best to use the Pkg system and avoid
+		Pip for installing Python libraries on FreeBSD, but
+		unfortunately <code>py36-matpotlib</code> is quite old and <code>PyPlots</code>
+		requires a newer version, so:
+	    </p>
+	    <pre>
+pkg install py36-matplotlib
+	    </pre>
+	    <p> Then:</p>
+	    <pre>
+pkg install py36-pip
+pip-3.6 install --user matplotlib
+	    </pre>
+	    <p> For MbedTLS.jl you'll need to:
+	    <pre>
+pkg install mbedtls
+	    </pre>
+	    <p>
+		IJulia needs some coaxing, see <a href="https://github.com/JuliaLang/IJulia.jl/pull/606">Fix to allow installation on FreeBSD 11.1 STABLE</a>.
+	    </p>
 	    <h2> Compared to Python </h2>
 	    <p>
-		Whilst Python code can be optimised, I find most Julia code to
-		be more performant with no effort (although I acknowledge that this
-		isn't always the case). For me, the switch to Julia meant that I
-		didn't have to move to a high performance compute cluster from
-		the convenience of a couple of PCs in the corner of my
+		Whilst Python code can be optimised, I find most Julia
+		code to be more performant with no effort (although I
+		acknowledge that this isn't always the case). For me,
+		the switch to Julia meant that I didn't have to move
+		to a high performance compute cluster from the
+		convenience of a couple of PCs in the corner of my
 		study.
 	    </p>
 	    <p>
-		Most of the time, Julia just feels nicer to use, and that's
-		important when you spend a large proportion of your life staring
-		at a REPL.
+		Most of the time, Julia just feels nicer to use, and
+		that's important when you spend a large proportion of
+		your life staring at a REPL.
 	    </p>
 	    <p>
 		The whole Python 2 or Python 3 thing is just irritating.
 	    </p>
+	    <p>
+		That said, there is still a lot of Python code under the
+		Julia hood (e.g. IJulia) so don't knock it!
+	    </p>
 	    <h2> Compared to MATLAB </h2>
 	    <p>
-		MATLAB usage is widespread amongst  scientists for good reason; it's established and has very
-		high quality, proven libraries. In many ways it is the gold standard for scientific, exploratory
-		programming.
+		MATLAB usage is widespread amongst scientists for good
+		reason; it's established and has very high quality,
+		proven libraries. In many ways it is the gold standard
+		for scientific, exploratory programming.
 	    </p>
 	    <p>
-		Unfortunately, a lot of graduate student science is just grunt work. Reading legacy file formats
-		and dealing with <q> big data</q> is a big part of that. MATLAB can do it, but it isn't very elegant. I also
-		found problems with compatability between versions. No two scientists
-		seem to use the same version and <q> it worked on my machine</q> is a common cry.
-		Upgrading a machine is often considered too risky or too expensive.
+		Unfortunately, a lot of graduate student science is
+		just grunt work. Reading legacy file formats and
+		dealing with <q> big data</q> is a big part of
+		that. MATLAB can do it, but it isn't very elegant. I
+		also found problems with compatability between
+		versions. No two scientists seem to use the same
+		version and <q> it worked on my machine</q> is a
+		common cry.  Upgrading a machine is often considered
+		too risky or too expensive.
 	    </p>
 	    <p>
-		I found that MATLAB programmers can readily understand Julia code. Googling
-		for a MATLAB solution to a problem often turns up a function name, and that
-		can be the key to finding an equivalent Julia solution.
+		I found that MATLAB programmers can readily understand
+		Julia code. Googling for a MATLAB solution to a
+		problem often turns up a function name, and that can
+		be the key to finding an equivalent Julia solution.
 	    </p>
 	    <p>
 		Julia is free and open source. The barrier to entry is much lower and
@@ -203,7 +291,7 @@ ERROR: invalid redefinition of constant wheels
 	    <p> <a href="https://common-lisp.net/project/slime/">SLIME</a>  support in Emacs would be great. I have a proof of concept
 		SWANK server.
 	    </p>
-	    <p>Last modified: Sat Nov 12:52:56 UTC 2017 by reb</p>
+	    <p>Last modified: Mon Jan 21:15:47 UTC 2018 by reb</p>
 	</article>
     </body>
 </html>
