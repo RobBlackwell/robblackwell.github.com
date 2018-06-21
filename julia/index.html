@@ -152,7 +152,18 @@ $ ./script.jl > output.txt 2> log.txt
 		written by info, warn and error.
 	    </p>
 
-	    <h2> On FreeBSD </h2>
+	    <h2> On Ubuntu 18.04 LTS</h2>
+	    <p>
+		If you use <code>ImageMagick.jl</code> directly or indirectly,
+		please note that the Ubuntu supplied  <code>libMagickWand</code>
+		is old and caused me lots of problems with cache
+		exhaustion.</p>
+	    <p>
+		You can update by grabbing <a href="https://www.imagemagick.org/download/releases/ImageMagick-6.9.9-51.tar.xz">ImageMagick-6.9.9-51.tar.xz</a>
+		and unpacking it under  <code>/usr/local/src</code> then doing
+		the usual  <code>./configure</code>,  <code>make</code>,  <code>sudo checkinstall</code> dance. After that you'll need to  <code>Pkg.build("ImageMagick)</code> and check the version is 6.9.9 with  <code>ImageMagick.libversion()</code>.
+	    </p>
+		<h2> On FreeBSD </h2>
 	    <p>
 		Julia works well on FreeBSD, but installation and
 		setup sometimes need a little more thought. There is
@@ -291,11 +302,11 @@ ERROR: invalid redefinition of constant wheels
 	    <p> <a href="https://common-lisp.net/project/slime/">SLIME</a>  support in Emacs would be great. I have a proof of concept
 		SWANK server.
 	    </p>
-	    <p>Last modified: Mon Jan 21:15:47 UTC 2018 by reb</p>
+	    <p>Last modified: Thu Jun 20:50:17 UTC 2018 by reb</p>
 	</article>
     </body>
 </html>
 <!-- Local Variables: -->
-<!-- time-stamp-pattern: "-8/<p>Last modified:[ \t]+%3a %3b %02H:%02M:%02S %Z %:y by %u</p>" -->
-<!-- time-stamp-time-zone: "UTC" -->
+<!-- time-stamp-pattern: "-10/Last modified:[ \t]+\\\\?[\"(]+%:y-%02m-%02d %02H:%02M:%02S %Z\\\\?[\")]" -->
+<!-- time-stamp-time-zone: `current-time-zone' -->
 <!-- End: -->
