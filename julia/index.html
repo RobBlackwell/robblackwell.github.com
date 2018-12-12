@@ -39,8 +39,7 @@
 	    <h2> Tools </h2>
 	    <p>
 		There are lots of options including Juno and Visual Studio Code, but I'm
-		just using Emacs and julia-mode.
-	    </p>
+		just using Emac, julia-mode and <a href="https://github.com/tpapp/julia-repl">julia-repl</a>.</p>
 	    <p>
 		I really like <a href="https://github.com/JuliaLang/IJulia.jl>">IJulia</a>
 		(Jupyter notebooks) and tend to have one per experiment / investigation,
@@ -54,10 +53,6 @@
 		and <a href="https://github.com/JuliaPy/Conda.jl">Conda.jl</a>.
 	    </p>
 	    <p>
-		I like to set <code>export CONDA_JL_VERSION="3"</code> in my shell, prior to installing the Conda.jl package
-		to pick up Python 3 instead of Python 2.
-	    </p>
-	    <p>
 		Examining <code>Conda.ROOTENV</code> within Julia gives the directory of
 		the underlying Python environment. This allows you to hop out
 		to a shell, <code>activate</code> the environment and <code>pip install</code>
@@ -69,37 +64,11 @@ using PyCall
 pynmea2.parse(mystring)
 		</pre>
 	    </p>
-	    <h2> Code reuse </h2>
-	    <p>
-		I often start protototyping code in an IJulia notebook. When an idea
-		starts to come together I move it into a separate text file in
-		a directory I call <code>includes</code>. I can then reuse it across
-		notebooks and scripts with:
-		<code>include(expanduser("~/Dropbox/phd/julia/include/plotsutils.jl"));</code>
-	    </p>
-	    <p>
-		Once I have a quorum of code on a particular topic and it starts to
-		feel like a reusable library, I create a package using <a href="https://github.com/JuliaLang/PkgDev.jl">PkgDev</a>.
-		I usually move that package directory from <code>~/.julia/vX.X</code> to my regular working
-		area and then link back to it using <code> ln -s ~/Dropbox/phd/julia/mypackage.jl mypackage</code>.
-		It's a good idea to make the real directory name <code>something.jl</code> and link just <code>something</code>
-		otherwise the <code>Pkg.test</code> facility doesn't seem to work.
-	    </p>
 	    <h2> Plotting </h2>
 	    <p>
-		There are lots of plotting libraries in Julia. My strategy is to use
-		<a href="https://github.com/JuliaPlots/Plots.jl">Plots.jl</a> whenever I
-		can and fall back to <a href="https://github.com/JuliaPy/PyPlot.jl">PyPlot</a>
-		for certain edge cases.
-	    </p>
-	    <p>
-		<A href="https://github.com/JuliaLang/IJulia.jl">IJulia</a> with
-		<a href="https://github.com/JuliaPlots/Plots.jl">Plots.jl</a> and
-		the <code>plotlyjs()</code> back end is particulalrly good for
-		interactive, exploratory programming. You might find that it
-		blows-up for large data sets, in which case try changing the backend
-		to <code>pyplot()</code>.
-	    </p>
+		There are lots of plotting libraries in Julia. I use <a href="https://github.com/JuliaPy/PyPlot.jl">PyPlot</a>
+		forpublication quality plots. <a href="https://github.com/JuliaGraphics/Winston.jl">Winston</a>
+		is useful and fast for interactive use.</p>
 	    <h2>Interpolation</h2>
 	    <p>
 		Interpolation via <code>interp1</code> and <code>interp2</code> is a common thing in MATLAB
@@ -138,11 +107,10 @@ end
 	    </p>
 	    <h2> Logging </h2>
 	    <p>
-		The output of info(), warn() and error() is sent to
-		STDERR instead of STDOUT making them ideal mechanisms
-		for instrumenting and logging scripts, without messing
-		up output.
-	    </p>
+		The output of <pre>@info()</pre>, <pre>@warn(),/pre> and <pre>@error()</pre>
+		is sent to STDERR instead of STDOUT making them ideal
+		mechanisms for instrumenting and logging scripts,
+		without messing up output.</p>
 	    <pre>
 $ ./script.jl > output.txt 2> log.txt
 	    </pre>
@@ -150,64 +118,6 @@ $ ./script.jl > output.txt 2> log.txt
 		The above results in two files, output.txt with
 		everything your printed and log.txt with everything
 		written by info, warn and error.
-	    </p>
-
-	    <h2> On Ubuntu 18.04 LTS</h2>
-	    <p>
-		If you use <code>ImageMagick.jl</code> directly or indirectly,
-		please note that the Ubuntu supplied  <code>libMagickWand</code>
-		is old and caused me lots of problems with cache
-		exhaustion.</p>
-	    <p>
-		You can update by grabbing <a href="https://www.imagemagick.org/download/releases/ImageMagick-6.9.9-51.tar.xz">ImageMagick-6.9.9-51.tar.xz</a>
-		and unpacking it under  <code>/usr/local/src</code> then doing
-		the usual  <code>./configure</code>,  <code>make</code>,  <code>sudo checkinstall</code> dance. After that you'll need to  <code>Pkg.build("ImageMagick)</code> and check the version is 6.9.9 with  <code>ImageMagick.libversion()</code>.
-	    </p>
-		<h2> On FreeBSD </h2>
-	    <p>
-		Julia works well on FreeBSD, but installation and
-		setup sometimes need a little more thought. There is
-		no Conda or other installer, so you must install
-		platform libraries yourself.  Packages are usually
-		tested on Windows, Mac and Linux rather than FreeBSD,
-		so be prepared for a bit of fixing up now and again.
-	    </p>
-	    <p>
-		Assuming FreeBSD 11.1 STABLE, julia 6.2 can be installed
-		using <code>pkg install julia</code>. It's hard to
-		go far in Julia without stumbling on some Python. The trick
-		is to install Python and PyCall first:
-	    </p>
-	    <pre>
-pkg install python3
-	    </pre>
-	    <p>
-		Then, in Julia:
-	    </p>
-	    <pre>
-ENV["PYTHON"]="python"
-Pkg.add("PyCall")
-	    </pre>
-	    <p>
-		In general it's best to use the Pkg system and avoid
-		Pip for installing Python libraries on FreeBSD, but
-		unfortunately <code>py36-matpotlib</code> is quite old and <code>PyPlots</code>
-		requires a newer version, so:
-	    </p>
-	    <pre>
-pkg install py36-matplotlib
-	    </pre>
-	    <p> Then:</p>
-	    <pre>
-pkg install py36-pip
-pip-3.6 install --user matplotlib
-	    </pre>
-	    <p> For MbedTLS.jl you'll need to:
-	    <pre>
-pkg install mbedtls
-	    </pre>
-	    <p>
-		IJulia needs some coaxing, see <a href="https://github.com/JuliaLang/IJulia.jl/pull/606">Fix to allow installation on FreeBSD 11.1 STABLE</a>.
 	    </p>
 	    <h2> Compared to Python </h2>
 	    <p>
@@ -259,12 +169,11 @@ pkg install mbedtls
 		Julia is free and open source. The barrier to entry is much lower and
 		that's got to be a good thing for <a href="https://reproduciblescience.org/">reprodicible science</a>.
 	    </p>
-	    <h2> Niggles and problems</h2>
-	    <p>
-		Because the package system uses git, the local library directory <code>~/.julia</code> ends up being
-		large, mine is currently about 3.7G, and time consuming to set up on a new machine. Fortunately,
-		<a href="https://www.youtube.com/watch?v=-yUiLCGegJs">there is a new package manager. Pkg3 in the works</a>.
+There is a <A href="https://github.com/JuliaIO/MAT.jl">mat.jl</a> library
+which allows reading of MATLAB MAT files. It used to allow writing,
+but since Julia 1.0 something seems to be broken with writing.<p>
 	    </p>
+	    <h2> Niggles and problems</h2>
 	    <p>
 		Julia is a <a href="https://en.wikipedia.org/wiki/Lisp-1_vs._Lisp-2">Lisp-1</a> so
 		naming variables so that they don't clash with functions can sometimes be
@@ -275,22 +184,7 @@ julia> wheels = wheels(mycar)
 ERROR: invalid redefinition of constant wheels
 </pre>
 			      
-	    <p>
-		Some people worry that <q>you're using a language which hasn't even reached 1.0</q>. In practice
-		this has never really caused me a problem, the language developers are dilligent about
-		deprecating old syntax.
-	    </p>
-	    <p>
-		Compiler lag: You <code>Pkg.update()</code>, then the next time you come to use an
-		updated package you have to sit and wait for it to compile. This gives the impression
-		tha Julia is slow, particularly when working interactively. Once compiled, it's typically
-		<em>very</em> fast.
-	    </p>
-	    <p>
-		Updating packages can cause alarming WARNING and ERROR messages. Don't
-		worry about the warnings, if you get errors then <code>Pkg.build("somepackage")</code>
-		is almost always a cure.
-	    </p>
+
 	    <h2> Wishlist</h2>
 	    <p>
 		Is there a way to ask <code>whocalls(f)</code> where f is some function?
@@ -302,11 +196,6 @@ ERROR: invalid redefinition of constant wheels
 	    <p> <a href="https://common-lisp.net/project/slime/">SLIME</a>  support in Emacs would be great. I have a proof of concept
 		SWANK server.
 	    </p>
-	    <p>Last modified: Thu Jun 20:50:17 UTC 2018 by reb</p>
 	</article>
     </body>
 </html>
-<!-- Local Variables: -->
-<!-- time-stamp-pattern: "-10/Last modified:[ \t]+\\\\?[\"(]+%:y-%02m-%02d %02H:%02M:%02S %Z\\\\?[\")]" -->
-<!-- time-stamp-time-zone: `current-time-zone' -->
-<!-- End: -->
