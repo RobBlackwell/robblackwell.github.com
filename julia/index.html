@@ -124,7 +124,7 @@ $ ./script.jl > output.txt 2> log.txt
 
 
 	    <p>Julia garbage collection is now GC.gc()</p>
-
+	    <p>
 	    <pre>
 julia> VERSION
 v"1.0.2"
@@ -146,7 +146,61 @@ Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz:
 #3  3506 MHz      32798 s          8 s       5405 s     372848 s          0 s
 #4  3499 MHz      26937 s          7 s       5934 s     376377 s          0 s
 </pre>
-	    
+	    </p>
+	    <h2>Masking confusion</h2>
+	    <p>
+		<pre>
+julia> a = [1 2 3; 4 5 6; 7 8 9]
+3×3 Array{Int64,2}:
+ 1  2  3
+ 4  5  6
+ 7  8  9
+
+julia> a .> 3
+3×3 BitArray{2}:
+ false  false  false
+  true   true   true
+  true   true   true
+		</pre>
+	    </p>
+	    <p>
+		All good so far, but the following result can be a surprise - we only get the values,
+		not the shape.
+	    </p>
+	    <p>
+		<pre>
+
+julia> a[a .>3]
+6-element Array{Int64,1}:
+ 4
+ 7
+ 5
+ 8
+ 6
+ 9
+		</pre>
+		</p>
+		<p>
+		    However mutating the array does work:
+		</p>
+		<p>
+		<pre>
+julia> a[a .>3] .= 3
+6-element view(::Array{Int64,1}, [2, 3, 5, 6, 8, 9]) with eltype Int64:
+ 3
+ 3
+ 3
+ 3
+ 3
+ 3
+
+julia> a
+3×3 Array{Int64,2}:
+ 1  2  3
+ 3  3  3
+ 3  3  3
+		</pre>
+		</p>
 	    <h2> Compared to Python </h2>
 	    <p>
 		Whilst Python code can be optimised, I find most Julia
@@ -197,9 +251,10 @@ Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz:
 		Julia is free and open source. The barrier to entry is much lower and
 		that's got to be a good thing for <a href="https://reproduciblescience.org/">reprodicible science</a>.
 	    </p>
-There is a <A href="https://github.com/JuliaIO/MAT.jl">mat.jl</a> library
-which allows reading of MATLAB MAT files. It used to allow writing,
-but since Julia 1.0 something seems to be broken with writing.<p>
+	    <p>
+		There is a <A href="https://github.com/JuliaIO/MAT.jl">mat.jl</a> library
+		which allows reading of MATLAB MAT files. It used to allow writing,
+		but since Julia 1.0 something seems to be broken with writing.<p>
 	    </p>
 	    <h2> Niggles and problems</h2>
 	    <p>
