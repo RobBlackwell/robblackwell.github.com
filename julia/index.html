@@ -107,7 +107,7 @@ end
 	    </p>
 	    <h2> Logging </h2>
 	    <p>
-		The output of <pre>@info()</pre>, <pre>@warn()</pre> and <pre>@error()</pre>
+		The output of <code>@info()</code>, <code>@warn()</code> and <code>@error()</code>
 		is sent to STDERR instead of STDOUT making them ideal
 		mechanisms for instrumenting and logging scripts,
 		without messing up output.</p>
@@ -119,6 +119,34 @@ $ ./script.jl > output.txt 2> log.txt
 		everything your printed and log.txt with everything
 		written by info, warn and error.
 	    </p>
+	    <h2> CPU and memory </h2>
+
+
+
+	    <p>Julia garbage collection is now GC.gc()</p>
+
+	    <pre>
+julia> VERSION
+v"1.0.2"
+
+julia> Sys.total_memory() / 2^20
+15764.0078125
+
+julia> Sys.free_memory() / 2^20
+294.72265625
+
+julia> Sys.CPU_NAME
+"skylake"
+
+julia> Sys.cpu_summary()
+Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz: 
+       speed         user         nice          sys         idle          irq
+#1  3500 MHz      27764 s         86 s       8320 s     472683 s          0 s
+#2  3502 MHz      26227 s        126 s       5428 s     375699 s          0 s
+#3  3506 MHz      32798 s          8 s       5405 s     372848 s          0 s
+#4  3499 MHz      26937 s          7 s       5934 s     376377 s          0 s
+</pre>
+	    
 	    <h2> Compared to Python </h2>
 	    <p>
 		Whilst Python code can be optimised, I find most Julia
