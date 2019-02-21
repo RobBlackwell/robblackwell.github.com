@@ -69,6 +69,32 @@ pynmea2.parse(mystring)
 		There are lots of plotting libraries in Julia. I use <a href="https://github.com/JuliaPy/PyPlot.jl">PyPlot</a>
 		forpublication quality plots. <a href="https://github.com/JuliaGraphics/Winston.jl">Winston</a>
 		is useful and fast for interactive use.</p>
+	    <h2> NaN </h2>
+	    <p>
+		Does an array contain NaNs? <code>any(isnan.(A))</code>.
+	    </p>
+	    <p>
+		Remove NaNs <code>filter(!isnan, A))</code>.
+	    </p>
+	    <h2> Missing </h2>
+	    <p>
+		<code>if m === missing ...</code> to test for missing.
+	    </p>
+	    <p>
+		<code>skipmissing(A)</code>.
+	    </p>
+	    <p> Remember to convert missing to NaN for PyPlot.
+	    </p>
+	    <h2>Dataframes</h2>
+	    <p>
+		<code>describe(df)</code>, <code>first(df,5)</code>, <code>last(df,5)</code>, <code>names(df)</code>,
+		<code>dropmissing(df, field)</code>.
+	    </p>
+	    <h2>How can I push to the front of a list?</h2>
+	    <p>
+		Whilst there is a <code>prepend!</code> there is no non-destructive <code>prepend</code>. It's
+		not needed, try <code>[1 ; [2,3,4]]</code> instead.
+	    </p>
 	    <h2>Interpolation</h2>
 	    <p>
 		Interpolation via <code>interp1</code> and <code>interp2</code> is a common thing in MATLAB
@@ -253,8 +279,7 @@ julia> a
 	    </p>
 	    <p>
 		There is a <A href="https://github.com/JuliaIO/MAT.jl">mat.jl</a> library
-		which allows reading of MATLAB MAT files. It used to allow writing,
-		but since Julia 1.0 something seems to be broken with writing.<p>
+		which allows reading and writing of MATLAB MAT files..<p>
 	    </p>
 	    <h2> Niggles and problems</h2>
 	    <p>
