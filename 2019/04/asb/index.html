@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>An aliased seabed detection algorithm</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">An aliased seabed detection algorithm</h1>
+</header>
+<h2 id="introduction">Introduction</h2>
+<p>In fisheries acoustics, aliased seabed is an echogram corruption that is caused by seabed reverberations from preceding pings coinciding with the current ping reception <span class="citation" data-cites="renfree2016optimizing">(Renfree and Demer, 2016)</span>.</p>
+<p><span id="eq:id" style="display: inline-block; position: relative; width: 100%"><span class="math display">\[R_{\mathcal{A}} = \frac{\mbox{mod}(2 R_S,\  c \ I_T)}{2}, \quad \textrm{where} \quad R_L &lt; R_S &lt; R_{max}\]</span><span style="position: absolute; right: 0em; top: 50%; line-height:0; text-align: right">(1)</span></span> </p>
+<p>The phenomenon occurs when Equation (<a href="#eq:id">1</a>) is satisfied, where <span class="math inline">\(R_{\mathcal{A}}\)</span> is the range of the aliased seabed, <span class="math inline">\(R_S\)</span> is the range of the seabed, <span class="math inline">\(I_T\)</span> is the ping interval, <span class="math inline">\(c\)</span> is the speed of sound in water, <span class="math inline">\(R_L\)</span> is the logging range and <span class="math inline">\(R_{max}\)</span> is the maximum range of the transducer.</p>
+<p>Seabed reflections can be seen clearly in split-beam angle data, but the patterns are difficult to segment because of noise.</p>
+<h2 id="method">Method</h2>
+<p>For Simrad EK60 data, along-ship angle (<span class="math inline">\(\eta_{\theta}\)</span>) and athwart-ship angle (<span class="math inline">\(\eta_{\phi}\)</span>) vary between -128 and 127 and so we take the mean-squared over a moving window to smooth the image and accentuate coherent signal (window sizes determined empirically). Whilst these pixels fall within the aliased seabed regions, only a small percentage of area is identified. However, we can take these pixels and then examine the surrounding region in volume backscatter (<span class="math inline">\(S_v\)</span>). Hence, we derive a five-step algorithm:</p>
+<ol type="1">
+<li><p>Find the mean squared of a <span class="math inline">\(28 \times 28\)</span> moving window over <span class="math inline">\(\eta_\theta\)</span> and select cells <span class="math inline">\(&gt; T_{\theta}\)</span> to produce a mask <span class="math inline">\(m_1\)</span>.</p></li>
+<li><p>Find the mean squared of a <span class="math inline">\(52 \times 52\)</span> moving window over <span class="math inline">\(\eta_\phi\)</span> and select cells <span class="math inline">\(&gt; T_{\phi}\)</span> to produce a mask <span class="math inline">\(m_2\)</span>.</p></li>
+<li><p>Combine the masks <span class="math inline">\(m = m_1 \lor m_2\)</span>.</p></li>
+<li><p>Select pixels from <span class="math inline">\(S_v\)</span> using the mask, <span class="math inline">\(m\)</span> and determine the median <span class="math inline">\(S_v\)</span> value of the selection to use as a threshold <span class="math inline">\(T\)</span>.</p></li>
+<li><p>Select regions from <span class="math inline">\(S_v\)</span> where <span class="math inline">\(S_v &gt; T\)</span> and which intersect <span class="math inline">\(m\)</span>. The resulting mask is the union of the selected regions and <span class="math inline">\(m\)</span>.</p></li>
+</ol>
+<p>The final mask is a grid indicating those pixels that have been classified as aliased seabed.</p>
+<h2 id="discussion">Discussion</h2>
+<p>In theory, aliased seabed is an additive corruption, and an alias which crosses a scattering layer should have a higher intensity than the surrounding scattering layer pixels. Unfortunately, this is not always the case and we have seen the algorithm “leak” into deep scattering layers. For this reason, the algorithm is not suitable for autonomous, unsupervised operation, but it is suitable for supervised environments where the output is checked by a human operator.</p>
+<p>The algorithm has been implemented in <a href="https://github.com/bas-acoustics/echopy">Python</a> and in <a href="https://github.com/EchoJulia/AliasedSeabed.jl/blob/master/src/AliasedSeabed.jl">Julia</a>.</p>
+<h2 id="references" class="unnumbered">References</h2>
+<div id="refs" class="references">
+<div id="ref-renfree2016optimizing">
+<p>Renfree, J.S., Demer, D.A., 2016. Optimizing transmit interval and logging range while avoiding aliased seabed echoes. ICES Journal of Marine Science 73, 1955–1964.</p>
+</div>
+</div>
+</body>
+</html>
