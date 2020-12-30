@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/robblackwell
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://robblackwell.com
+  * I am robblackwell (https://keybase.io/robblackwell) on keybase.
+  * I have a public key ASCKTiK-mr2e19Jzs6EwX2MserBJYFoa0_EY1j7gEhXNUAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012064548747cdc958426c2fcfac7f8f7414e5e54cdc8f1c0751a910ae429c2318090a",
+      "host": "keybase.io",
+      "kid": "01208a4e22be9abd9ed7d273b3a1305f632c7ab049605a1ad3f118d63ee01215cd500a",
+      "uid": "8c2b121715e14787b1152e2cc8e8e419",
+      "username": "robblackwell"
+    },
+    "merkle_root": {
+      "ctime": 1609321148,
+      "hash": "a6fa708d342a1b972b988bc72c205fe4e862a5d99d6a3f364fc49e7045682cc24b01a17ec41b2137af4302fede51461493943e6bfc27caf154e978c38243f523",
+      "hash_meta": "cc45d87569442a0ba1b9fbc4502e81592e0ba71d7fc6ed532899b159453e1e9a",
+      "seqno": 18542072
+    },
+    "service": {
+      "entropy": "yGdbYU+LyhE0PZ1v56Z33SQQ",
+      "hostname": "robblackwell.com",
+      "protocol": "http:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.5.0"
+  },
+  "ctime": 1609321237,
+  "expire_in": 504576000,
+  "prev": "277ab24e1ef278b3bad8cf5ded7c09e691219aa6b70f53995eeff73f1196439b",
+  "seqno": 8,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgik4ivpq9ntfSc7OhMF9jLHqwSWBaGtPxGNY+4BIVzVAKp3BheWxvYWTESpcCCMQgJ3qyTh7yeLO62M9d7XwJ5pEhmqa3D1OZXu/3PxGWQ5vEID6wQ8NVMTSFVdWmlkcgCBwIjwngzyVkG2zBTgXv/IBgAgHCo3NpZ8RAvcimT2lrQbFlxZNcdhyvXCVtWs94iGA8yO5WDQPaZU9Effq1P6UyLO7FuL6iglv6h8Plg/7o/Hyr3l5oyGqsAqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEID/kcZ2Fbxw1aR2xnbMG1g9GSFQKld/Q5c81tikfQYqlo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/robblackwell
+
+==================================================================
